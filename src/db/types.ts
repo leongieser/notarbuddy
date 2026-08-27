@@ -33,3 +33,67 @@ export interface OcrWord {
   y1: number;
   confidence: number;
 }
+
+export type RunKind = "extraction" | "judge";
+
+export type RunStatus = "running" | "succeeded" | "failed";
+
+export type AgentStepType =
+  | "reasoning"
+  | "tool_call"
+  | "tool_result"
+  | "finish";
+
+/** `flagged` is a first-class outcome: the agent may report that it could not determine a value. */
+export type FieldStatus = "extracted" | "flagged" | "confirmed" | "corrected";
+
+export type EventActor =
+  | `agent:${string}`
+  | `judge:${string}`
+  | "user"
+  | "system";
+
+export type EventAction =
+  | "extracted"
+  | "flagged"
+  | "confirmed"
+  | "corrected"
+  | "ocr_completed"
+  | "ocr_failed"
+  | "run_failed"
+  | "judge_verified"
+  | "judge_escalated";
+
+/** Box as a fraction of page width/height, so it survives any render size. */
+export interface RelativeBox {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+/** Where a value came from. Offsets are page-local; see OcrWord. */
+export interface SourceSpan {
+  pageId: string;
+  pageIndex: number;
+  start: number;
+  end: number;
+  quote: string;
+  box: RelativeBox | null;
+}
+
+export interface AgentStepPayload {
+  toolName?: string;
+  input?: unknown;
+  output?: unknown;
+  text?: string;
+  isError?: boolean;
+}
+
+/** Kept alongside the value so an audit entry is readable without joining anything. */
+export interface EventEvidence {
+  spans?: SourceSpan[];
+  confidence?: number;
+  reason?: string;
+  model?: string;
+}
