@@ -6,10 +6,17 @@ export interface RasterPage {
   height: number;
 }
 
-/** 2x the PDF's natural size: OCR accuracy on small print falls off sharply below this. */
+/**
+ * 2x the PDF's natural size — roughly 144 dpi for A4, where OCR of small print is still
+ * reliable. Callers simulating a scanner pass a higher scale so degradation has the pixels
+ * a real 300 dpi scan would have.
+ */
 const SCALE = 2;
 
-export async function rasterizePdf(pdf: Buffer): Promise<RasterPage[]> {
+export async function rasterizePdf(
+  pdf: Buffer,
+  scale = SCALE,
+): Promise<RasterPage[]> {
   // pdfjs ships as an ESM build that expects a browser-ish global; the legacy build is
   // the one that runs under Node.
   const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
@@ -22,7 +29,7 @@ export async function rasterizePdf(pdf: Buffer): Promise<RasterPage[]> {
   const out: RasterPage[] = [];
   for (let i = 1; i <= doc.numPages; i++) {
     const page = await doc.getPage(i);
-    const viewport = page.getViewport({ scale: SCALE });
+    const viewport = page.getViewport({ scale });
     const canvas = createCanvas(
       Math.ceil(viewport.width),
       Math.ceil(viewport.height),

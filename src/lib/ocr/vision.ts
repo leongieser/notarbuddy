@@ -1,6 +1,11 @@
 import { ImageAnnotatorClient } from "@google-cloud/vision";
 import type { OcrError, OcrErrorCode } from "@/db/types";
-import { buildCanonicalText, type RawWord } from "./canonical";
+import {
+  buildCanonicalText,
+  clusterIntoLines,
+  type RawWord,
+} from "./canonical";
+import { detectLineMarks } from "./marks";
 
 export class OcrFailure extends Error {
   constructor(readonly detail: OcrError) {
@@ -16,6 +21,8 @@ function getClient() {
 }
 
 export interface OcrPageResult {
+  /** Median word confidence across the page. */
+  confidence: number;
   canonicalText: string;
   words: ReturnType<typeof buildCanonicalText>["words"];
   width: number;
@@ -70,8 +77,25 @@ export async function ocrImage(png: Buffer): Promise<OcrPageResult> {
   }
 
   const width = page.width ?? 0;
-  const { text, words } = buildCanonicalText(raw, width);
-  return { canonicalText: text, words, width, height: page.height ?? 0 };
+  const marks = await detectLineMarks(png, clusterIntoLines(raw), width);
+  const { text, words } = buildCanonicalText(raw, width, marks);
+  return {
+    confidence: meanConfidence(raw),
+    canonicalText: text,
+    words,
+    width,
+    height: page.height ?? 0,
+  };
+}
+
+/**
+ * Mean, not median. Median was tried first and proved useless as a quality signal: it read
+ * 0.92 on a scan degraded past legibility and 0.98 on a clean render, because half the words
+ * on a bad page are still read perfectly. The mean carries the tail that actually matters.
+ */
+function meanConfidence(words: RawWord[]): number {
+  if (words.length === 0) return 0;
+  return words.reduce((sum, w) => sum + w.confidence, 0) / words.length;
 }
 
 function classify(error: unknown): OcrError {

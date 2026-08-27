@@ -14,8 +14,39 @@ export interface RawWord {
  * Fraction of page width above which a gap between words reads as a column break
  * rather than a space. Relative so it survives any scan resolution.
  */
-const COLUMN_GAP_RATIO = 0.028;
+export const COLUMN_GAP_RATIO = 0.028;
 const COLUMN_SEPARATOR = "   |   ";
+
+/**
+ * Vision emits punctuation and hyphens as separate words, so a naive space-join turns
+ * "Kiel-Süd" into "Kiel - Süd" and "Wendt," into "Wendt ,". Measured over the samples,
+ * such adjacencies sit below 0.36 of the word height while ordinary word spacing starts
+ * around 0.58 — this threshold is inside that gap.
+ */
+const TIGHT_GAP_RATIO = 0.35;
+
+/** Never preceded by a space. */
+const TRAILING_PUNCTUATION = /^[,.;:!?)\]}»"']+$/;
+/** Never followed by a space. */
+const LEADING_PUNCTUATION = /^[([{«]+$/;
+const HYPHEN = /^[-–—]$/;
+
+/**
+ * Whether two adjacent words on a line should be joined with no space between them.
+ * Geometry alone would misjudge tightly-set columns, and punctuation rules alone would
+ * misjudge a hyphen used as a dash — both have to agree.
+ */
+function joinsWithoutSpace(
+  previous: string,
+  current: string,
+  gapRatio: number,
+): boolean {
+  if (gapRatio > TIGHT_GAP_RATIO) return false;
+  if (TRAILING_PUNCTUATION.test(current)) return true;
+  if (LEADING_PUNCTUATION.test(previous)) return true;
+  // "Gebäude-" keeps its hyphen but still gets a space before "und"; the gap decides.
+  return HYPHEN.test(current) || HYPHEN.test(previous);
+}
 
 /**
  * Rebuilds reading order from word geometry.
@@ -28,6 +59,8 @@ const COLUMN_SEPARATOR = "   |   ";
 export function buildCanonicalText(
   words: RawWord[],
   pageWidth: number,
+  /** Per-line, per-segment strike marks; see `splitIntoSegments`. */
+  marks: (string | null)[][] = [],
 ): { text: string; words: OcrWord[] } {
   if (words.length === 0) return { text: "", words: [] };
 
@@ -40,21 +73,53 @@ export function buildCanonicalText(
   for (const [lineIndex, line] of lines.entries()) {
     if (lineIndex > 0) text += "\n";
 
+    let segmentIndex = 0;
     for (const [wordIndex, word] of line.entries()) {
       if (wordIndex > 0) {
-        const gap = word.x0 - line[wordIndex - 1].x1;
-        text += gap > columnGap ? COLUMN_SEPARATOR : " ";
+        const previous = line[wordIndex - 1];
+        const gap = word.x0 - previous.x1;
+        const gapRatio = gap / Math.max(word.y1 - word.y0, 1);
+
+        if (gap > columnGap) {
+          // The strike is measured from the image and written into the text, so a deleted
+          // entry is readable rather than something a model has to notice in a picture.
+          const mark = marks[lineIndex]?.[segmentIndex];
+          if (mark) text += `  [${mark}]`;
+          segmentIndex++;
+          text += COLUMN_SEPARATOR;
+        } else if (!joinsWithoutSpace(previous.text, word.text, gapRatio)) {
+          text += " ";
+        }
       }
       const start = text.length;
       text += word.text;
       placed.push({ ...word, start, end: text.length });
     }
+
+    const lastMark = marks[lineIndex]?.[segmentIndex];
+    if (lastMark) text += `  [${lastMark}]`;
   }
 
   return { text, words: placed };
 }
 
-function clusterIntoLines(words: RawWord[]): RawWord[][] {
+/** Splits a line at column breaks, so a cell can be judged on its own. */
+export function splitIntoSegments(
+  line: RawWord[],
+  pageWidth: number,
+): RawWord[][] {
+  const threshold = pageWidth * COLUMN_GAP_RATIO;
+  const segments: RawWord[][] = [[line[0]]];
+
+  for (const word of line.slice(1)) {
+    const previous = segments.at(-1)?.at(-1);
+    if (previous && word.x0 - previous.x1 > threshold) segments.push([word]);
+    else segments.at(-1)?.push(word);
+  }
+  return segments;
+}
+
+export function clusterIntoLines(words: RawWord[]): RawWord[][] {
   const byVerticalCentre = [...words].sort((a, b) => centre(a) - centre(b));
   const lines: { centre: number; words: RawWord[] }[] = [];
 

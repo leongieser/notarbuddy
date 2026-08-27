@@ -41,6 +41,7 @@ export async function ocrPage(pageId: string) {
         ocrStatus: "ok",
         ocrError: null,
         canonicalText: result.canonicalText,
+        ocrConfidence: result.confidence,
         words: result.words,
         updatedAt: new Date(),
       })
