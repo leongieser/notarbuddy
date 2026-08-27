@@ -1,5 +1,6 @@
 import {
   integer,
+  jsonb,
   pgTable,
   text,
   timestamp,
@@ -7,7 +8,13 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
-import type { DocumentStatus, SourceType } from "./types";
+import type {
+  DocumentStatus,
+  OcrError,
+  OcrStatus,
+  OcrWord,
+  SourceType,
+} from "./types";
 
 const timestamptz = (name: string) => timestamp(name, { withTimezone: true });
 
@@ -42,6 +49,15 @@ export const pages = pgTable(
     imagePath: text("image_path").notNull(),
     width: integer("width").notNull(),
     height: integer("height").notNull(),
+    ocrStatus: varchar("ocr_status", { length: 16 })
+      .$type<OcrStatus>()
+      .default("pending")
+      .notNull(),
+    /** Set only when ocrStatus is `failed`. */
+    ocrError: jsonb("ocr_error").$type<OcrError>(),
+    /** Our own geometry-based reconstruction, not Vision's reading order. */
+    canonicalText: text("canonical_text"),
+    words: jsonb("words").$type<OcrWord[]>(),
     ...timestamps,
   },
   (t) => [

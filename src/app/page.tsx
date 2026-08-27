@@ -1,4 +1,5 @@
 import { desc, eq } from "drizzle-orm";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -64,7 +65,12 @@ export default async function Home() {
               <Card key={doc.id}>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-base">
-                    {doc.name}
+                    <Link
+                      href={`/documents/${doc.id}`}
+                      className="hover:underline"
+                    >
+                      {doc.name}
+                    </Link>
                     <Badge variant="secondary">{doc.sourceType}</Badge>
                   </CardTitle>
                   <CardDescription>
