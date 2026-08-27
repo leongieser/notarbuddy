@@ -1,0 +1,63 @@
+{
+  "markierungsstil": "unterstrichen",
+  "amtsgericht": "Amtsgericht München",
+  "grundbuchbezirk": "München",
+  "blatt": "4521",
+  "letzteAenderung": "15.11.2023",
+  "ausdruckVom": "20.12.2024",
+  "bestandsverzeichnis": [
+    {
+      "lfdNr": "1",
+      "gemarkung": "München",
+      "flur": "125",
+      "flurstueck": "1847/2",
+      "wirtschaftsartUndLage": "Wohnung mit Zubehör, München-Schwabing, Kurfürstenstraße 42, 3. Obergeschoß, Wohnungseigentum nebst Miteigentumsanteil am Grundstück nebst Sondernutzungsrecht an Stellplatz Nr. 7",
+      "groesseHa": "",
+      "groesseA": "",
+      "groesseQm": "92,50"
+    }
+  ],
+  "eigentuemer": [
+    {
+      "lfdNr": "1",
+      "name": "Dipl.-Ing. Klaus Benedikt Weber und Helga Weber geb. Richter",
+      "anteil": "je 1/2 in Gesamthandschaft",
+      "betroffeneGrundstuecke": "1",
+      "grundlageDerEintragung": "Auflassung vom 28.03.2018, Eintragung 15.04.2018; Eigentum erworben durch Auflassung vom 28.03.2018 im Wege der Neuerstattung der Wohnung nach Wohnungseigentumserwerb gemäß Teilungserklärung vom 20.02.2018, eingetragen im Grundbuch München Blatt 4521 am 15.04.2018, unter ehelicher Gütergemeinschaft nach § 1415 BGB",
+      "status": "aktiv"
+    }
+  ],
+  "abteilung2": [],
+  "abteilung3": [
+    {
+      "lfdNr": "1",
+      "betroffeneGrundstuecke": "1",
+      "betrag": "180.000,00",
+      "waehrung": "Euro",
+      "art": "Grundschuld",
+      "glaeubiger": "Süddeutsche Bank AG, München",
+      "status": "aktiv",
+      "loeschungsvermerk": null
+    },
+    {
+      "lfdNr": "2",
+      "betroffeneGrundstuecke": "1",
+      "betrag": "45.000,00",
+      "waehrung": "Euro",
+      "art": "Grundschuld",
+      "glaeubiger": "Versicherungsbank eG, Stuttgart",
+      "status": "geloescht",
+      "loeschungsvermerk": "Löschung vollzogen 22.08.2021 aufgrund Löschungsbewilligung vom 20.08.2021"
+    },
+    {
+      "lfdNr": "3",
+      "betroffeneGrundstuecke": "1",
+      "betrag": "60.000,00",
+      "waehrung": "Euro",
+      "art": "Grundschuld",
+      "glaeubiger": "VR-Bank Oberbayern eG, Starnberg",
+      "status": "geloescht",
+      "loeschungsvermerk": "Löschung vollzogen 10.11.2023 aufgrund Löschungsbewilligung vom 08.11.2023"
+    }
+  ]
+}

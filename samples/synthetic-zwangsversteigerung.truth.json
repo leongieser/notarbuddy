@@ -1,0 +1,82 @@
+{
+  "markierungsstil": "durchgestrichen",
+  "amtsgericht": "Amtsgericht Esslingen am Neckar",
+  "grundbuchbezirk": "Esslingen am Neckar",
+  "blatt": "4527",
+  "letzteAenderung": "18.03.2024",
+  "ausdruckVom": "22.11.2024",
+  "bestandsverzeichnis": [
+    {
+      "lfdNr": "1",
+      "gemarkung": "Nellingen",
+      "flur": "3",
+      "flurstueck": "248",
+      "wirtschaftsartUndLage": "Gewerbegrundstück, Industriestraße 45",
+      "groesseHa": "0",
+      "groesseA": "42",
+      "groesseQm": "4287"
+    },
+    {
+      "lfdNr": "2",
+      "gemarkung": "Nellingen",
+      "flur": "3",
+      "flurstueck": "249",
+      "wirtschaftsartUndLage": "Gewerbegrundstück, Industriestraße 47",
+      "groesseHa": "0",
+      "groesseA": "38",
+      "groesseQm": "3856"
+    }
+  ],
+  "eigentuemer": [
+    {
+      "lfdNr": "1",
+      "name": "TechniSystems Verwaltungs- und Beteiligungsgesellschaft mbH mit beschränkter Haftung, Stuttgart-Vaihingen, Registernummer HRB 789543 beim Amtsgericht Stuttgart",
+      "anteil": null,
+      "betroffeneGrundstuecke": "1, 2",
+      "grundlageDerEintragung": "Auflassung vom 14.02.2023, Eintragung am 15.03.2023; Bewilligung vom Vorpächter Müller GmbH & Co. KG vom 10.02.2023",
+      "status": "aktiv"
+    }
+  ],
+  "abteilung2": [
+    {
+      "lfdNr": "1",
+      "betroffeneGrundstuecke": "1, 2",
+      "text": "Zwangsversteigerungsvermerk für das Amtsgericht Esslingen am Neckar, Verfahren 3 K 567/2024, Bewilligung vom 12.09.2024, Eintragung am 18.09.2024",
+      "status": "aktiv"
+    },
+    {
+      "lfdNr": "2",
+      "betroffeneGrundstuecke": "1, 2",
+      "text": "Beschränkt persönliche Dienstbarkeit: Recht zur Leitungsführung für Stromleitungen zugunsten der Stadtwerke Esslingen am Neckar, eingetragen am 05.11.2022",
+      "status": "aktiv"
+    },
+    {
+      "lfdNr": "3",
+      "betroffeneGrundstuecke": "1",
+      "text": "Beschränkt persönliche Dienstbarkeit: Recht zur Leitungsführung für Gasleitungen zugunsten der Gasverwaltung Region Stuttgart GmbH, eingetragen am 28.07.2021, gelöscht durch Bewilligung vom 17.02.2024",
+      "status": "geloescht"
+    }
+  ],
+  "abteilung3": [
+    {
+      "lfdNr": "1",
+      "betroffeneGrundstuecke": "1, 2",
+      "betrag": "385.000,00",
+      "waehrung": "EUR",
+      "art": "Grundschuld",
+      "glaeubiger": "Commerzbank AG, Filiale Stuttgart",
+      "status": "aktiv",
+      "loeschungsvermerk": null
+    },
+    {
+      "lfdNr": "2",
+      "betroffeneGrundstuecke": "1, 2",
+      "betrag": "220.000,00",
+      "waehrung": "EUR",
+      "art": "Grundschuld",
+      "glaeubiger": "Sparkasse Esslingen-Nürtingen",
+      "status": "aktiv",
+      "loeschungsvermerk": null
+    }
+  ]
+}

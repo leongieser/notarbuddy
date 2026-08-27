@@ -1,0 +1,96 @@
+{
+  "markierungsstil": "durchgestrichen",
+  "amtsgericht": "Amtsgericht Osnabrück",
+  "grundbuchbezirk": "Georgsmarienhütte",
+  "blatt": "1847",
+  "letzteAenderung": "15.11.2023",
+  "ausdruckVom": "22.03.2025",
+  "bestandsverzeichnis": [
+    {
+      "lfdNr": "1",
+      "gemarkung": "Harderberg",
+      "flur": "12",
+      "flurstueck": "156",
+      "wirtschaftsartUndLage": "Ackerland, südlich der Bundesstraße 51",
+      "groesseHa": "4",
+      "groesseA": "25",
+      "groesseQm": ""
+    },
+    {
+      "lfdNr": "2",
+      "gemarkung": "Harderberg",
+      "flur": "12",
+      "flurstueck": "157",
+      "wirtschaftsartUndLage": "Grünland, angrenzend Flurstück 156",
+      "groesseHa": "3",
+      "groesseA": "8",
+      "groesseQm": ""
+    },
+    {
+      "lfdNr": "3",
+      "gemarkung": "Harderberg",
+      "flur": "13",
+      "flurstueck": "42",
+      "wirtschaftsartUndLage": "Ackerland mit Feldschutzstreifen",
+      "groesseHa": "2",
+      "groesseA": "15",
+      "groesseQm": ""
+    },
+    {
+      "lfdNr": "4",
+      "gemarkung": "Harderberg",
+      "flur": "13",
+      "flurstueck": "43",
+      "wirtschaftsartUndLage": "Grünland, Wiesenfläche",
+      "groesseHa": "1",
+      "groesseA": "32",
+      "groesseQm": ""
+    }
+  ],
+  "eigentuemer": [
+    {
+      "lfdNr": "1",
+      "name": "Werner Klempner, Landwirt, Beckhäuser Straße 24, 49124 Georgsmarienhütte",
+      "anteil": null,
+      "betroffeneGrundstuecke": "1, 2, 3, 4",
+      "grundlageDerEintragung": "Auflassung vom 12.06.1998, Eintragung 22.07.1998; Erbfolge nach Tode der Ehefau Christiane Klempner vom 08.03.2019, Eintragung 19.04.2019",
+      "status": "aktiv"
+    }
+  ],
+  "abteilung2": [
+    {
+      "lfdNr": "1",
+      "betroffeneGrundstuecke": "1, 2",
+      "text": "Leitungsrecht für eine Hochdruckfernleitung zugunsten der Stadtwerke Georgsmarienhütte GmbH, Freigabenummer 4712/2001, Bewilligung vom 14.09.2001, Eintragung 28.10.2001. Das Recht erstreckt sich auf die in der Planzeichnung näher bestimmten Flächen.",
+      "status": "aktiv"
+    },
+    {
+      "lfdNr": "2",
+      "betroffeneGrundstuecke": "1, 2, 3, 4",
+      "text": "Altenteil/Leibgeding zugunsten des verstorbenen Alwin Klempner, geb. 12.11.1924, gest. 08.05.2009. Gemäß Übergabevertrag vom 22.05.1972, Eintragung 15.06.1972, bestätigt durch notarielle Beurkundung vom 18.03.2001. Eintragung des Hinweises auf Erlöschen mit Sterbeurkunde vom 15.05.2009, Eintragung 02.06.2009.",
+      "status": "geloescht"
+    }
+  ],
+  "abteilung3": [
+    {
+      "lfdNr": "1",
+      "betroffeneGrundstuecke": "1, 2, 3",
+      "betrag": "180.000,00",
+      "waehrung": "EUR",
+      "art": "Grundschuld",
+      "glaeubiger": "Raiffeisenbank Harderberg eG, Bergstraße 8, 49124 Georgsmarienhütte",
+      "status": "aktiv",
+      "loeschungsvermerk": null
+    },
+    {
+      "lfdNr": "2",
+      "betroffeneGrundstuecke": "3, 4",
+      "betrag": "95.000,00",
+      "waehrung": "EUR",
+      "art": "Grundschuld",
+      "glaeubiger": "Bundesbank Landesamt Hannover",
+      "status": "geloescht",
+      "loeschungsvermerk": "Löschung bewilligt mit Schreiben vom 19.08.2021, Eintragung 08.09.2021"
+    }
+  ]
+}

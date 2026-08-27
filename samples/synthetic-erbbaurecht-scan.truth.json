@@ -1,0 +1,86 @@
+{
+  "markierungsstil": "unterstrichen",
+  "amtsgericht": "Amtsgericht Paderborn",
+  "grundbuchbezirk": "Paderborn",
+  "blatt": "4782",
+  "letzteAenderung": "15.03.2024",
+  "ausdruckVom": "18.03.2024",
+  "bestandsverzeichnis": [
+    {
+      "lfdNr": "1",
+      "gemarkung": "Paderborn",
+      "flur": "15",
+      "flurstueck": "287",
+      "wirtschaftsartUndLage": "Wohngrundstück, Paulusstraße 42, Paderborn",
+      "groesseHa": "0",
+      "groesseA": "28",
+      "groesseQm": "2847"
+    }
+  ],
+  "eigentuemer": [
+    {
+      "lfdNr": "1",
+      "name": "Dr. Heinrich Volker Feldmann",
+      "anteil": null,
+      "betroffeneGrundstuecke": "1",
+      "grundlageDerEintragung": "Eintrag des Erbbaurechts gemäß Bewilligung vom 22.05.2018, Eintragung am 08.06.2018. Abtretung des Erbbaurechts gemäß Bewilligung vom 03.11.2021, Eintragung am 15.11.2021.",
+      "status": "aktiv"
+    },
+    {
+      "lfdNr": "2",
+      "name": "Margarethe Feldmann, geb. Sonnenberg",
+      "anteil": null,
+      "betroffeneGrundstuecke": "1",
+      "grundlageDerEintragung": "Eintrag des Erbbaurechts gemäß Bewilligung vom 22.05.2018, Eintragung am 08.06.2018. Eintragung durch Heirat mit Person lfd. Nr. 1 gemäß Eheschließungsurkunde vom 10.07.2019, Eintragung am 25.07.2019.",
+      "status": "aktiv"
+    },
+    {
+      "lfdNr": "3",
+      "name": "Evangelische Kirchengemeinde Paderborn-Zentrum, Körperschaft des öffentlichen Rechts, Paderborn",
+      "anteil": null,
+      "betroffeneGrundstuecke": "1",
+      "grundlageDerEintragung": "Eintrag als Berechtigter des Erbbaurechts gemäß Bewilligung vom 22.05.2018, Eintragung am 08.06.2018. Zugleich Eintrag des Grundeigentums. Grundeigentum unverändert seit Eintragung.",
+      "status": "aktiv"
+    },
+    {
+      "lfdNr": "4",
+      "name": "Helmut Wagner",
+      "anteil": null,
+      "betroffeneGrundstuecke": "1",
+      "grundlageDerEintragung": "Eintrag gemäß Erbfolge (Erbschein vom 17.04.2014, Eintragung am 02.05.2014). Löschung gemäß Abtretungsbewilligung vom 22.05.2018, Eintragung am 08.06.2018.",
+      "status": "geloescht"
+    }
+  ],
+  "abteilung2": [
+    {
+      "lfdNr": "1",
+      "betroffeneGrundstuecke": "1",
+      "text": "Reallast zugunsten der Evangelischen Kirchengemeinde Paderborn-Zentrum: Zahlung einer jährlichen Rente von 1.200,00 EUR zum Ersten eines jeden Jahres. Bewilligung vom 22.05.2018, Eintragung am 08.06.2018.",
+      "status": "aktiv"
+    },
+    {
+      "lfdNr": "2",
+      "betroffeneGrundstuecke": "1",
+      "text": "Vorkaufsrecht der Evangelischen Kirchengemeinde Paderborn-Zentrum für den Fall einer Veräußerung des Erbbaurechts oder eines Anteils daran. Bewilligung vom 22.05.2018, Eintragung am 08.06.2018.",
+      "status": "aktiv"
+    },
+    {
+      "lfdNr": "3",
+      "betroffeneGrundstuecke": "1",
+      "text": "Nacherbenvermerk: Nachfolger im Falle des Todes beider Erbbauberechtigten ist die Evangelische Kirchengemeinde Paderborn-Zentrum. Bewilligung vom 10.07.2019, Eintragung am 25.07.2019.",
+      "status": "aktiv"
+    }
+  ],
+  "abteilung3": [
+    {
+      "lfdNr": "1",
+      "betroffeneGrundstuecke": "1",
+      "betrag": "185.000,00",
+      "waehrung": "EUR",
+      "art": "Grundschuld",
+      "glaeubiger": "Paderborner Volksbank eG",
+      "status": "aktiv",
+      "loeschungsvermerk": null
+    }
+  ]
+}

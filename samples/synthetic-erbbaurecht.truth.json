@@ -1,0 +1,62 @@
+{
+  "amtsgericht": "Amtsgericht Tübingen",
+  "grundbuchbezirk": "Tübingen",
+  "blatt": "4521",
+  "letzteAenderung": "15.11.2024",
+  "ausdruckVom": "20.11.2024",
+  "bestandsverzeichnis": [
+    {
+      "lfdNr": "1",
+      "gemarkung": "Tübingen",
+      "flur": "12",
+      "flurstueck": "487",
+      "wirtschaftsartUndLage": "Wohngrundstück, Gartenstraße 23, Tübingen",
+      "groesseHa": "0",
+      "groesseA": "34",
+      "groesseQm": "3421"
+    }
+  ],
+  "eigentuemer": [
+    {
+      "lfdNr": "1",
+      "name": "Heinrich Bernhard Müller und Gabriele Müller, geb. Wunderlich, Eheleute, beide wohnhaft in Tübingen, Gartenstraße 23, Gütergemeinschaft",
+      "anteil": null,
+      "betroffeneGrundstuecke": "1",
+      "grundlageDerEintragung": "Erbbaurecht gewährt durch Vollmacht der Evangelischen Kirchengemeinde Tübingen vom 08.09.2022, Eintragung vom 12.10.2022. Erbbaurecht für die Dauer von 99 Jahren ab 01.01.2023.",
+      "status": "aktiv"
+    },
+    {
+      "lfdNr": "2",
+      "name": "Werner Kästner, wohnhaft in Stuttgart",
+      "anteil": "1/1",
+      "betroffeneGrundstuecke": "1",
+      "grundlageDerEintragung": "Auflassung vom 22.04.1998, Eintragung vom 28.05.1998",
+      "status": "geloescht"
+    }
+  ],
+  "abteilung2": [
+    {
+      "lfdNr": "1",
+      "betroffeneGrundstuecke": "1",
+      "text": "Reallast: Das Grundstück ist mit der Verpflichtung belastet, jährlich einen Betrag von 450,00 EUR an die Evangelische Kirchengemeinde Tübingen zu zahlen. Bewilligt durch Vollmacht vom 08.09.2022, eingetragen am 12.10.2022.",
+      "status": "aktiv"
+    },
+    {
+      "lfdNr": "2",
+      "betroffeneGrundstuecke": "1",
+      "text": "Vorkaufsrecht zugunsten der Evangelischen Kirchengemeinde Tübingen auf den Fall einer Veräußerung des Grundstücks. Bewilligt durch Urkunde vom 08.09.2022, eingetragen am 12.10.2022.",
+      "status": "aktiv"
+    }
+  ],
+  "abteilung3": [
+    {
+      "lfdNr": "1",
+      "betroffeneGrundstuecke": "1",
+      "betrag": "175.000,00",
+      "waehrung": "EUR",
+      "art": "Grundschuld",
+      "glaeubiger": "Süddeutsche Landesbank AG, Stuttgart",
+      "status": "aktiv"
+    }
+  ]
+}

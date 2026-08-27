@@ -1,0 +1,84 @@
+{
+  "markierungsstil": "unterstrichen",
+  "amtsgericht": "Amtsgericht Lübeck",
+  "grundbuchbezirk": "Lübeck-Stadt",
+  "blatt": "4521",
+  "letzteAenderung": "15.03.2024",
+  "ausdruckVom": "20.03.2024",
+  "bestandsverzeichnis": [
+    {
+      "lfdNr": "1",
+      "gemarkung": "Lübeck-Innenstadt",
+      "flur": "8",
+      "flurstueck": "247",
+      "wirtschaftsartUndLage": "Wohngrundstück, Königstraße 42",
+      "groesseHa": "",
+      "groesseA": "",
+      "groesseQm": "385"
+    }
+  ],
+  "eigentuemer": [
+    {
+      "lfdNr": "1",
+      "name": "Dietrich Sperling",
+      "anteil": "1/3",
+      "betroffeneGrundstuecke": "1",
+      "grundlageDerEintragung": "Erbfolge gemäß Erbschein des Amtsgerichts Lübeck vom 12.01.2024, eingetragen am 15.03.2024",
+      "status": "aktiv"
+    },
+    {
+      "lfdNr": "2",
+      "name": "Margot Sperling geb. Richter",
+      "anteil": "1/3",
+      "betroffeneGrundstuecke": "1",
+      "grundlageDerEintragung": "Erbfolge gemäß Erbschein des Amtsgerichts Lübeck vom 12.01.2024, eingetragen am 15.03.2024",
+      "status": "aktiv"
+    },
+    {
+      "lfdNr": "3",
+      "name": "Klaus Sperling",
+      "anteil": "1/3",
+      "betroffeneGrundstuecke": "1",
+      "grundlageDerEintragung": "Erbfolge gemäß Erbschein des Amtsgerichts Lübeck vom 12.01.2024, eingetragen am 15.03.2024",
+      "status": "aktiv"
+    },
+    {
+      "lfdNr": "4",
+      "name": "Heinrich Sperling",
+      "anteil": null,
+      "betroffeneGrundstuecke": "1",
+      "grundlageDerEintragung": "Eigentumsübertragung durch notarielle Urkunde vom 08.07.1998, Eintragung vom 25.08.1998, gelöscht durch Erbfolge gemäß Erbschein vom 12.01.2024",
+      "status": "geloescht"
+    }
+  ],
+  "abteilung2": [
+    {
+      "lfdNr": "1",
+      "betroffeneGrundstuecke": "1",
+      "text": "Wegerecht zugunsten des Grundstücks Königstraße 40, Lübeck-Innenstadt, Flur 8, Flurstueck 246. Bewilligung vom 03.11.2015, eingetragen am 18.11.2015.",
+      "status": "aktiv"
+    }
+  ],
+  "abteilung3": [
+    {
+      "lfdNr": "1",
+      "betroffeneGrundstuecke": "1",
+      "betrag": "185.000,00",
+      "waehrung": "EUR",
+      "art": "Grundschuld",
+      "glaeubiger": "Norddeutsche Landesbank, Hannover",
+      "status": "aktiv",
+      "loeschungsvermerk": null
+    },
+    {
+      "lfdNr": "2",
+      "betroffeneGrundstuecke": "1",
+      "betrag": "120.000,00",
+      "waehrung": "DM",
+      "art": "Hypothek",
+      "glaeubiger": "Commerzbank AG, Lübeck",
+      "status": "geloescht",
+      "loeschungsvermerk": "Gelöscht mit Eintragung vom 15.03.2024"
+    }
+  ]
+}

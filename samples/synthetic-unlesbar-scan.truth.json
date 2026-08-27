@@ -1,0 +1,58 @@
+{
+  "markierungsstil": "unterstrichen",
+  "amtsgericht": "Amtsgericht Hannover",
+  "grundbuchbezirk": "Hannover-Süd",
+  "blatt": "4521",
+  "letzteAenderung": "15.11.2023",
+  "ausdruckVom": "22.01.2025",
+  "bestandsverzeichnis": [
+    {
+      "lfdNr": "1",
+      "gemarkung": "Hannover",
+      "flur": "12",
+      "flurstueck": "156",
+      "wirtschaftsartUndLage": "Wohngrundstück, Marienstraße 47",
+      "groesseHa": "",
+      "groesseA": "4",
+      "groesseQm": "412"
+    }
+  ],
+  "eigentuemer": [
+    {
+      "lfdNr": "1",
+      "name": "Klaus-Dieter Bergmann, Dipl.-Ing., Marienstraße 47, 30169 Hannover",
+      "anteil": null,
+      "betroffeneGrundstuecke": "1",
+      "grundlageDerEintragung": "Auflassung vom 08.03.2019, Eintragung am 12.04.2019",
+      "status": "aktiv"
+    },
+    {
+      "lfdNr": "2",
+      "name": "Margarethe Fassmann, geb. Schulze, Marienstraße 47, 30169 Hannover",
+      "anteil": null,
+      "betroffeneGrundstuecke": "1",
+      "grundlageDerEintragung": "Auflassung vom 02.11.1998, Eintragung am 28.11.1998",
+      "status": "geloescht"
+    }
+  ],
+  "abteilung2": [
+    {
+      "lfdNr": "1",
+      "betroffeneGrundstuecke": "1",
+      "text": "Wegerecht zugunsten der Flurstücke 157 und 158 der Gemarkung Hannover, Flur 12. Bewilligung vom 04.07.2008, Eintragung am 22.07.2008.",
+      "status": "aktiv"
+    }
+  ],
+  "abteilung3": [
+    {
+      "lfdNr": "1",
+      "betroffeneGrundstuecke": "1",
+      "betrag": "185.000,00",
+      "waehrung": "EUR",
+      "art": "Grundschuld",
+      "glaeubiger": "Norddeutsche Landesbank, Hannover",
+      "status": "aktiv",
+      "loeschungsvermerk": null
+    }
+  ]
+}
