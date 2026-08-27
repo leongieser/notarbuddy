@@ -32,6 +32,13 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+
+/.gcp/
+*-sa.json
+*service-account*.json
+
+/data/uploads/
 
 # vercel
 .vercel
@@ -39,3 +46,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/.agents/
+/.claude/skills/
