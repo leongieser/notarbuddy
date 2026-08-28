@@ -194,6 +194,65 @@ export function parseFieldPath(path: string): ParsedPath | null {
   };
 }
 
+/** Just the field's own name, for a list already grouped by entry. */
+export function fieldLabelForPath(path: string): string {
+  const parsed = parseFieldPath(path);
+  if (!parsed) return path;
+  if (parsed.index === null) return parsed.label;
+  const group = LIST_BY_KEY.get(parsed.group);
+  return (
+    group?.fields.find((f) => f.key === parsed.field)?.label ?? parsed.field
+  );
+}
+
+/** Short human label for a path, for the review UI. */
+export function labelForPath(path: string): string {
+  const parsed = parseFieldPath(path);
+  if (!parsed) return path;
+  if (parsed.index === null) return parsed.label;
+
+  const group = LIST_BY_KEY.get(parsed.group);
+  const field = group?.fields.find((f) => f.key === parsed.field);
+  return `${parsed.index + 1}. ${field?.label ?? parsed.field}`;
+}
+
+/**
+ * Which part of the Grundbuch a path belongs to, so the review can be grouped the way the
+ * document itself is rather than as one flat list of paths.
+ */
+export function groupForPath(path: string): {
+  key: string;
+  title: string;
+  order: number;
+  critical: boolean;
+} {
+  const parsed = parseFieldPath(path);
+  if (!parsed || parsed.index === null) {
+    return { key: "grundbuch", title: "Aufschrift", order: 0, critical: false };
+  }
+
+  const group = LIST_BY_KEY.get(parsed.group);
+  const label = group?.label ?? parsed.group;
+  const position = LIST_GROUPS.findIndex((g) => g.key === parsed.group);
+  const entry = parsed.index + 1;
+  const noun =
+    parsed.group === "bestandsverzeichnis"
+      ? "Grundstück"
+      : parsed.group === "eigentuemer"
+        ? "Eigentümer"
+        : "Eintrag";
+
+  return {
+    key: `${parsed.group}[${parsed.index}]`,
+    // "Eigentümer · Eigentümer 1" says the word twice; the section already names itself.
+    title: label.startsWith(noun)
+      ? `${label} ${entry}`
+      : `${label} · ${noun} ${entry}`,
+    order: (position + 1) * 100 + parsed.index,
+    critical: parsed.critical,
+  };
+}
+
 /** Rendered into the system prompt so the model sees exactly which paths exist. */
 export function describeSchema(): string {
   const singles = SINGLE_FIELDS.map((f) => `  ${f.key} — ${f.hint}`).join("\n");

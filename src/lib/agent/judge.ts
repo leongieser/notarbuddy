@@ -3,11 +3,8 @@ import { anthropic } from "@ai-sdk/anthropic";
 import { generateObject } from "ai";
 import { and, eq, inArray } from "drizzle-orm";
 import { z } from "zod";
-import { agentSteps, db, documents, events, fields, pages, runs } from "@/db";
+import { agentSteps, db, events, fields, pages, runs } from "@/db";
 import { resolvePageImage } from "@/lib/ingest/storage";
-import { LIST_GROUPS } from "@/lib/urkunde/schema";
-
-const CRITICAL_GROUPS = LIST_GROUPS.filter((g) => g.critical).map((g) => g.key);
 
 const verdictSchema = z.object({
   verdict: z.enum(["bestaetigt", "widersprochen"]),

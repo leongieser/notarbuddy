@@ -14,9 +14,25 @@ import {
 import {
   CitationError,
   type CitationTarget,
+  legibilityConfidence,
   locateQuote,
-  ocrConfidenceForRange,
+  valueConfidence,
 } from "./citation";
+
+/**
+ * Undoes a JSON escape a model wrote out as literal characters.
+ *
+ * `JSON.stringify` never produces `\uXXXX` for these, so a note reading "f\u00fcr den
+ * ersten Eigent\u00fcmer" is the model escaping its own arguments a second time. Decoded
+ * here at the boundary rather than on display, so what lands in the field and in the audit
+ * log is the text itself — the audit log is supposed to be readable three weeks later.
+ */
+function decodeEscapes(text: string): string {
+  return text.replace(/\\u([0-9a-fA-F]{4})/g, (match, hex) => {
+    const code = Number.parseInt(hex, 16);
+    return Number.isNaN(code) ? match : String.fromCharCode(code);
+  });
+}
 
 /** Below this, a value is flagged for review rather than presented as extracted. */
 const CONFIDENCE_THRESHOLD = 0.8;
@@ -191,7 +207,9 @@ export function buildTools(documentId: string, runId: string) {
           .limit(1);
         if (!page)
           return { png: null, message: `Seite ${pageIndex} existiert nicht.` };
-        const png = await readFile(resolvePageImage(page.imagePath));
+        const png = await downscaleForModel(
+          await readFile(resolvePageImage(page.imagePath)),
+        );
         return { png: png.toString("base64"), message: null };
       },
       toModelOutput: ({ output }) => ({
@@ -267,9 +285,14 @@ export function buildTools(documentId: string, runId: string) {
             continue;
           }
 
+          const value = decodeEscapes(entry.value);
+          const note = entry.note ? decodeEscapes(entry.note) : undefined;
+
           let spans: SourceSpan[];
           try {
-            spans = entry.quotes.map((quote) => locateQuote(page, quote));
+            spans = entry.quotes.map((quote) =>
+              locateQuote(page, decodeEscapes(quote)),
+            );
           } catch (error) {
             if (error instanceof CitationError) {
               results.push({
@@ -282,13 +305,16 @@ export function buildTools(documentId: string, runId: string) {
             throw error;
           }
 
-          // Weakest OCR reading across every cited fragment drags the field down.
-          const effective = Math.min(
-            entry.confidence,
-            ...spans.map((span) =>
-              ocrConfidenceForRange(page, span.start, span.end),
-            ),
-          );
+          // What the OCR confidence should measure depends on where the value came from.
+          // A name is words, so the weakest of those words drags it down. An entry's
+          // aktiv/geloescht state is not in the text at all — it comes from the underline
+          // measurement — so what matters there is whether the row was legible enough to
+          // measure, which the median answers and the minimum does not.
+          const reading =
+            parsed.field === "status"
+              ? legibilityConfidence(page, spans)
+              : valueConfidence(page, spans, value);
+          const effective = Math.min(entry.confidence, reading);
           const status =
             effective < CONFIDENCE_THRESHOLD ? "flagged" : "extracted";
 
@@ -296,12 +322,12 @@ export function buildTools(documentId: string, runId: string) {
             documentId,
             actor,
             path: entry.path,
-            value: entry.value,
+            value,
             confidence: effective,
             spans,
             status,
             critical: parsed.critical,
-            note: entry.note ?? null,
+            note: note ?? null,
           });
 
           results.push({
@@ -343,7 +369,7 @@ export function buildTools(documentId: string, runId: string) {
           spans: null,
           status: "flagged",
           critical: parsed.critical,
-          note: reason,
+          note: decodeEscapes(reason),
         });
         return { ok: true as const, path, status: "flagged" };
       },
