@@ -49,3 +49,6 @@ next-env.d.ts
 
 /.agents/
 /.claude/skills/
+
+# Working notes, not part of the submission
+/DECISIONS.md

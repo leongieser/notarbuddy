@@ -1,6 +1,8 @@
-import { desc, eq } from "drizzle-orm";
+import { countDistinct, desc, eq, sql } from "drizzle-orm";
 import Link from "next/link";
+import { DeleteDocument } from "@/components/delete-document";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -14,20 +16,51 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from "@/components/ui/empty";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { UploadForm } from "@/components/upload-form";
-import { db, documents, pages } from "@/db";
+import { db, documents, fields, pages } from "@/db";
 
 export const dynamic = "force-dynamic";
 
+const STATUS_LABEL = {
+  uploaded: "hochgeladen",
+  extracting: "läuft",
+  review: "zur Prüfung",
+  failed: "fehlgeschlagen",
+} as const;
+
+const dateFormat = new Intl.DateTimeFormat("de-DE", {
+  dateStyle: "short",
+  timeStyle: "short",
+});
+
 export default async function Home() {
-  const docs = await db
-    .select()
+  const rows = await db
+    .select({
+      id: documents.id,
+      name: documents.name,
+      status: documents.status,
+      createdAt: documents.createdAt,
+      // Joining both children multiplies rows, so every count has to be distinct.
+      pageCount: countDistinct(pages.id),
+      fieldCount: countDistinct(fields.id),
+      flaggedCount: sql<number>`count(distinct ${fields.id}) filter (where ${fields.status} = 'flagged')`,
+    })
     .from(documents)
+    .leftJoin(pages, eq(pages.documentId, documents.id))
+    .leftJoin(fields, eq(fields.documentId, documents.id))
+    .groupBy(documents.id)
     .orderBy(desc(documents.createdAt));
-  const allPages = await db.select().from(pages).orderBy(pages.pageIndex);
 
   return (
-    <main className="mx-auto flex max-w-3xl flex-col gap-8 p-8">
+    <main className="mx-auto flex w-full min-w-0 max-w-5xl flex-col gap-8 p-8">
       <header className="flex flex-col gap-1">
         <h1 className="font-semibold text-2xl">NotaryBuddy</h1>
         <p className="text-muted-foreground text-sm">
@@ -47,9 +80,9 @@ export default async function Home() {
         </CardContent>
       </Card>
 
-      <section className="flex flex-col gap-4">
+      <section className="flex min-w-0 flex-col gap-4">
         <h2 className="font-medium text-lg">Dokumente</h2>
-        {docs.length === 0 ? (
+        {rows.length === 0 ? (
           <Empty>
             <EmptyHeader>
               <EmptyTitle>Noch keine Dokumente</EmptyTitle>
@@ -59,41 +92,79 @@ export default async function Home() {
             </EmptyHeader>
           </Empty>
         ) : (
-          docs.map((doc) => {
-            const docPages = allPages.filter((p) => p.documentId === doc.id);
-            return (
-              <Card key={doc.id}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-base">
-                    <Link
-                      href={`/documents/${doc.id}`}
-                      className="hover:underline"
-                    >
-                      {doc.name}
-                    </Link>
-                    <Badge variant="secondary">{doc.sourceType}</Badge>
-                  </CardTitle>
-                  <CardDescription>
-                    {docPages.length}{" "}
-                    {docPages.length === 1 ? "Seite" : "Seiten"} · {doc.status}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-3">
-                    {docPages.map((page) => (
-                      // biome-ignore lint/performance/noImgElement: page images are served from a route handler, not the public dir
-                      <img
-                        key={page.id}
-                        src={`/api/pages/${page.id}/image`}
-                        alt={`Seite ${page.pageIndex + 1}`}
-                        className="h-40 w-auto rounded border bg-white object-contain"
-                      />
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })
+          <div className="min-w-0 overflow-x-auto rounded border">
+            {/* min-w-0: a flex item does not shrink below its content by default, so
+                without it the table pushes the whole page into a horizontal scroll
+                instead of scrolling inside this container. */}
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Dokument</TableHead>
+                  <TableHead className="w-24 text-right">Seiten</TableHead>
+                  <TableHead className="w-32 text-right">Felder</TableHead>
+                  <TableHead className="w-36">Status</TableHead>
+                  <TableHead className="w-40">Hochgeladen</TableHead>
+                  <TableHead className="w-44" />
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {rows.map((doc) => (
+                  <TableRow key={doc.id}>
+                    <TableCell className="font-medium">
+                      <Link
+                        href={`/documents/${doc.id}`}
+                        className="hover:underline"
+                      >
+                        {doc.name}
+                      </Link>
+                    </TableCell>
+                    <TableCell className="text-right tabular-nums">
+                      {doc.pageCount}
+                    </TableCell>
+                    <TableCell className="text-right tabular-nums">
+                      {doc.fieldCount > 0 ? (
+                        <>
+                          {doc.fieldCount}
+                          {doc.flaggedCount > 0 ? (
+                            <span className="ml-2 text-destructive">
+                              {doc.flaggedCount} markiert
+                            </span>
+                          ) : null}
+                        </>
+                      ) : (
+                        <span className="text-muted-foreground">—</span>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={
+                          doc.status === "failed" ? "destructive" : "secondary"
+                        }
+                      >
+                        {STATUS_LABEL[doc.status]}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground text-sm">
+                      {dateFormat.format(doc.createdAt)}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          nativeButton={false}
+                          render={<Link href={`/documents/${doc.id}`} />}
+                        >
+                          Öffnen
+                        </Button>
+                        <DeleteDocument documentId={doc.id} name={doc.name} />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </section>
     </main>
