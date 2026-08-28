@@ -20,6 +20,21 @@ import {
   SELECTABLE_MODELS,
 } from "@/lib/agent/pricing";
 
+/** How close to the bottom still counts as watching the tail. */
+const TAIL_SLACK = 48;
+
+const RUN_LABEL = {
+  running: "läuft",
+  succeeded: "erfolgreich",
+  failed: "fehlgeschlagen",
+} as const;
+
+const RUN_BADGE = {
+  running: "secondary",
+  succeeded: "success",
+  failed: "destructive",
+} as const;
+
 interface Step {
   id: string;
   seq: number;
@@ -52,6 +67,13 @@ export function ExtractionPanel({
   const [starting, setStarting] = useState(false);
   const [model, setModel] = useState<string>(DEFAULT_MODEL);
   const refreshedFor = useRef<string | null>(null);
+  // How many field-writing tool results the page has already been refreshed for.
+  const seenWrites = useRef(0);
+  const stepList = useRef<HTMLOListElement>(null);
+  // Follow the tail only while the reader is already at it. Scrolling them back down
+  // mid-sentence because a tool call landed is the same mistake as a sticky panel that
+  // fights the scroll; reading an earlier step has to survive the next one arriving.
+  const following = useRef(true);
 
   const poll = useCallback(async (id: string) => {
     const res = await fetch(`/api/runs/${id}`);
@@ -59,7 +81,18 @@ export function ExtractionPanel({
     const data = await res.json();
     setRun(data.run);
     setSteps(data.steps);
-    return data.run.status as Run["status"];
+    return {
+      status: data.run.status as Run["status"],
+      // Only these two write fields, so counting them is the cheapest honest signal that
+      // the dataset changed — refreshing on every poll would re-run the page's queries
+      // every two seconds for nothing.
+      writes: (data.steps as Step[]).filter(
+        (step) =>
+          step.type === "tool_result" &&
+          (step.payload?.toolName === "record_fields" ||
+            step.payload?.toolName === "flag_field"),
+      ).length,
+    };
   }, []);
 
   useEffect(() => {
@@ -67,12 +100,20 @@ export function ExtractionPanel({
     let active = true;
 
     const tick = async () => {
-      const status = await poll(runId);
-      if (!active) return;
-      if (status === "running") {
+      const result = await poll(runId);
+      if (!active || !result) return;
+
+      // The dataset is rendered by the server component, so it only moves when the page
+      // refreshes. Doing that as the agent records lets the Datensatz fill during the run
+      // instead of appearing all at once at the end.
+      if (result.writes > seenWrites.current) {
+        seenWrites.current = result.writes;
+        router.refresh();
+      }
+
+      if (result.status === "running") {
         setTimeout(tick, 2000);
-      } else if (status && refreshedFor.current !== runId) {
-        // Fields are rendered by the server component, so a finished run needs a refresh.
+      } else if (refreshedFor.current !== runId) {
         refreshedFor.current = runId;
         router.refresh();
       }
@@ -88,6 +129,7 @@ export function ExtractionPanel({
     setStarting(true);
     setSteps([]);
     refreshedFor.current = null;
+    seenWrites.current = 0;
     const res = await fetch(`/api/documents/${documentId}/extract`, {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -99,6 +141,15 @@ export function ExtractionPanel({
   }
 
   const running = run?.status === "running" || starting;
+
+  // A finished run opens at its first step — that is where you read from. A live one
+  // stays at its last, because the next step is the one you are waiting for.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: steps.length is the trigger — a new step is exactly what this reacts to
+  useEffect(() => {
+    const list = stepList.current;
+    if (!list || !running || !following.current) return;
+    list.scrollTop = list.scrollHeight;
+  }, [steps.length, running]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -135,10 +186,8 @@ export function ExtractionPanel({
           </Button>
           {run ? (
             <>
-              <Badge
-                variant={run.status === "failed" ? "destructive" : "secondary"}
-              >
-                {run.status}
+              <Badge variant={RUN_BADGE[run.status]}>
+                {RUN_LABEL[run.status]}
               </Badge>
               <span className="text-muted-foreground text-xs">{run.model}</span>
               <span className="text-muted-foreground text-xs">
@@ -155,7 +204,15 @@ export function ExtractionPanel({
       ) : null}
 
       {steps.length > 0 ? (
-        <ol className="max-h-[28rem] overflow-auto rounded border">
+        <ol
+          ref={stepList}
+          onScroll={(event) => {
+            const el = event.currentTarget;
+            following.current =
+              el.scrollHeight - el.scrollTop - el.clientHeight < TAIL_SLACK;
+          }}
+          className="max-h-[28rem] overflow-auto rounded border"
+        >
           {steps.map((step) => (
             <li key={step.id} className="border-b px-3 py-2 last:border-b-0">
               <StepRow step={step} />
