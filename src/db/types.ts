@@ -62,7 +62,8 @@ export type EventAction =
   | "ocr_failed"
   | "run_failed"
   | "judge_verified"
-  | "judge_escalated";
+  | "judge_escalated"
+  | "draft_generated";
 
 /** Box as a fraction of page width/height, so it survives any render size. */
 export interface RelativeBox {
@@ -79,7 +80,8 @@ export interface SourceSpan {
   start: number;
   end: number;
   quote: string;
-  box: RelativeBox | null;
+  /** One box per visual line the span covers; a wrapped cell needs several. */
+  boxes: RelativeBox[];
 }
 
 export interface AgentStepPayload {

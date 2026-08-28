@@ -178,11 +178,25 @@ export const events = pgTable(
   ],
 );
 
-export type Document = typeof documents.$inferSelect;
-export type NewDocument = typeof documents.$inferInsert;
+/** A generated Urkunden-Entwurf, rendered deterministically from confirmed field values. */
+export const drafts = pgTable(
+  "drafts",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    documentId: uuid("document_id")
+      .references(() => documents.id, { onDelete: "cascade" })
+      .notNull(),
+    content: text("content").notNull(),
+    /** The exact values used, so the draft stays readable even after fields change. */
+    snapshot: jsonb("snapshot")
+      .$type<Record<string, string | null>>()
+      .notNull(),
+    createdAt: timestamptz("created_at").defaultNow().notNull(),
+  },
+  (t) => [index("drafts_document_id_idx").on(t.documentId)],
+);
+
 export type Page = typeof pages.$inferSelect;
-export type NewPage = typeof pages.$inferInsert;
 export type Run = typeof runs.$inferSelect;
-export type AgentStep = typeof agentSteps.$inferSelect;
 export type Field = typeof fields.$inferSelect;
 export type Event = typeof events.$inferSelect;

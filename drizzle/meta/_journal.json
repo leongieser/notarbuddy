@@ -43,6 +43,13 @@
       "when": 1787858723364,
       "tag": "0005_ocr_confidence",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1787882570356,
+      "tag": "0006_drafts",
+      "breakpoints": true
     }
   ]
 }
