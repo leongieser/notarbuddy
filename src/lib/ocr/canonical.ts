@@ -146,3 +146,23 @@ export function clusterIntoLines(words: RawWord[]): RawWord[][] {
 }
 
 const centre = (w: RawWord) => (w.y0 + w.y1) / 2;
+
+const SECTIONS: [RegExp, string][] = [
+  [/abteilung\s*III|abteilung\s*3/i, "Abteilung III"],
+  [/abteilung\s*II|abteilung\s*2/i, "Abteilung II"],
+  [/abteilung\s*I\b|abteilung\s*1/i, "Abteilung I"],
+  [/bestandsverzeichnis/i, "Bestandsverzeichnis"],
+];
+
+/**
+ * Names a page from its own heading. Only the first lines are considered — the words also
+ * appear in body text, where they refer to other sections rather than to this one.
+ */
+export function detectSection(canonicalText: string | null): string {
+  if (!canonicalText) return "";
+  const head = canonicalText.split("\n").slice(0, 3).join(" ");
+  for (const [pattern, name] of SECTIONS) {
+    if (pattern.test(head)) return name;
+  }
+  return /grundbuch/i.test(head) ? "Deckblatt" : "";
+}

@@ -29,6 +29,9 @@ const MAX_GAP_COVERAGE = 0.3;
  * Ignore very short runs. A three-character signature fragment underlined by a flourish is
  * not evidence that an entry was deleted, and marking it would cry wolf.
  */
+/** How far below a line's word boxes an underline may sit, as a fraction of line height. */
+export const UNDERLINE_BAND = 0.5;
+
 const MIN_SEGMENT_WIDTH_RATIO = 0.03;
 
 interface Pixels {
@@ -75,6 +78,28 @@ export function lineSlope(line: RawWord[]): number {
 
   // Beyond a few degrees this is noise, not skew.
   return Math.max(-0.09, Math.min(0.09, numerator / denominator));
+}
+
+/**
+ * Page skew, taken as the median of the lines long enough for a fit to mean anything.
+ *
+ * Per-line slopes cannot be trusted: on a three-word cell the least-squares fit runs
+ * through word centres whose heights differ by a digit or a comma, and it returns a slope
+ * of a degree or so on a page with no skew at all. That was enough to walk the margin
+ * probes off a two-pixel table rule, so the rule stopped looking like a rule and three
+ * active owners were reported as gelöscht. A page has one skew; measure it once.
+ */
+function pageSlope(lines: RawWord[][], pageWidth: number): number {
+  const usable = lines.filter(
+    (line) =>
+      line.length >= 4 &&
+      Math.max(...line.map((w) => w.x1)) - Math.min(...line.map((w) => w.x0)) >
+        pageWidth * 0.2,
+  );
+  if (usable.length === 0) return 0;
+
+  const slopes = usable.map(lineSlope).sort((a, b) => a - b);
+  return slopes[Math.floor(slopes.length / 2)];
 }
 
 function coverage(
@@ -128,6 +153,21 @@ function longestRun(
   return best / Math.max(to - from, 1);
 }
 
+/** Best coverage within a pixel of the probe line, so residual skew cannot hide a rule. */
+function nearby(
+  px: Pixels,
+  x0: number,
+  x1: number,
+  y: number,
+  slope: number,
+): number {
+  return Math.max(
+    coverage(px, x0, x1, y - 1, slope),
+    coverage(px, x0, x1, y, slope),
+    coverage(px, x0, x1, y + 1, slope),
+  );
+}
+
 /**
  * A rule drawn under one cell stops at that cell. A table rule continues past it, into the
  * column gaps on either side — that is what separates the two, since both are equally dark
@@ -150,14 +190,10 @@ function struckAt(
 
   for (let y = from; y <= to; y++) {
     if (longestRun(px, x0, x1, y, slope) < MIN_TEXT_COVERAGE) continue;
-    const before = coverage(px, x0 - margin, x0 - 2, y - margin * slope, slope);
-    const after = coverage(
-      px,
-      x1 + 2,
-      x1 + margin,
-      y + (x1 - x0) * slope,
-      slope,
-    );
+    // A rule one pixel off the probe is still a rule, so take the best of a small band:
+    // missing it would promote a table border to an underline.
+    const before = nearby(px, x0 - margin, x0 - 2, y - margin * slope, slope);
+    const after = nearby(px, x1 + 2, x1 + margin, y + (x1 - x0) * slope, slope);
     if (Math.max(before, after) < MAX_GAP_COVERAGE) return true;
   }
   return false;
@@ -176,10 +212,10 @@ export async function detectLineMarks(
   const raw = ctx.getImageData(0, 0, image.width, image.height);
   const px: Pixels = { data: raw.data, width: raw.width, height: raw.height };
 
+  const slope = pageSlope(lines, pageWidth);
+
   return lines.map((line) => {
     if (line.length === 0) return [];
-
-    const slope = lineSlope(line);
 
     return splitIntoSegments(line, pageWidth).map((segment) => {
       const top = Math.min(...segment.map((w) => w.y0));
@@ -187,12 +223,13 @@ export async function detectLineMarks(
       const height = Math.max(bottom - top, 1);
 
       // Descenders reach slightly below the reported box, so start just above it.
+      // Any crop meant to show an underline has to reach at least UNDERLINE_BAND below it.
       if (
         struckAt(
           px,
           segment,
           Math.round(bottom - 2),
-          Math.round(bottom + height * 0.5),
+          Math.round(bottom + height * UNDERLINE_BAND),
           pageWidth,
           slope,
         )
